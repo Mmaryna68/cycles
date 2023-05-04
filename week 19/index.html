@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Планировщик задач</title>
+    <link rel="stylesheet" href="styles/style.css" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Планировщик задач &#128221;</h1>
+      <div class="form">
+        <label for="task-input">Введите задачу:</label>
+        <input type="text" id="task-input" class="task-input" />
+        <button id="add-task">Добавить задачу</button>
+      </div>
+      <div class="task-list">
+        <h2>Список задач</h2>
+        <ul id="task-list" class="task-list">
+            <li>
+                <input type="checkbox" disabled>
+                <label>Пример задачи</label>
+            </li>
+        </ul>
+        <button id="clear-tasks" disabled>Очистить список</button>
+        <div id="no-tasks-message" style="display: none;">Задачи отсутствуют</div>
+    </div>
+    <script>
+		const taskInput = document.getElementById('task-input');
+		const addTaskButton = document.getElementById('add-task');
+		const taskList = document.getElementById('task-list');
+		const clearTasksButton = document.getElementById('clear-tasks');
+		const noTaskMessage = document.getElementById('no-tasks-message');
+
+		function updateTaskList() {
+			taskList.innerHTML = '';
+			for (let i = 0; i < tasks.length; i++) {
+				const task = tasks[i];
+				const listItem = document.createElement('li');
+				const checkbox = document.createElement('input');
+				checkbox.type = 'checkbox';
+				checkbox.checked = task.isCompleted;
+				checkbox.addEventListener('change', () => {
+					task.isCompleted = checkbox.checked;
+				});
+				listItem.appendChild(checkbox);
+				const label = document.createElement('label');
+				label.textContent = task.description;
+				listItem.appendChild(label);
+				taskList.appendChild(listItem);
+			}
+			if (tasks.length === 0) {
+				noTaskMessage.style.display = 'block';
+				clearTasksButton.disabled = true;
+			} else {
+				noTaskMessage.style.display = 'none';
+				clearTasksButton.disabled = false;
+			}
+		}
+
+		function addTask() {
+			const taskDescription = taskInput.value;
+			if (taskDescription.trim() !== '') {
+				const task = {
+					description: taskDescription,
+					isCompleted: false
+				};
+				tasks.push(task);
+				updateTaskList();
+				taskInput.value = '';
+			}
+		}
+
+		function clearTasks() {
+			tasks = [];
+            taskInput.value = '';
+			updateTaskList();
+		}
+
+		let tasks = [];
+		addTaskButton.addEventListener('click', addTask);
+		clearTasksButton.addEventListener('click', clearTasks);
+		updateTaskList();
+	</script>
+    <script src="script.js"></script>
+  </body>
+</html>
